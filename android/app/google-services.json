@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945256206169",
+    "project_id": "rollin-d2a4c",
+    "storage_bucket": "rollin-d2a4c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945256206169:android:040da53c4927b9d8f70648",
+        "android_client_info": {
+          "package_name": "com.example.rollin_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrbWcfUkvb69uG1-LWjPGYF0pGiCAdsGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
