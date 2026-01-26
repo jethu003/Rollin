@@ -2,24 +2,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rollin_user/domain/usecases/register_usecase.dart';
-import 'package:rollin_user/data/repositories/create_user_repositoryimpl.dart';
-import 'package:rollin_user/presentation/authentication/login.dart';
+
 import 'package:rollin_user/presentation/bloc/create_user/create_user_bloc.dart';
 import 'package:rollin_user/presentation/bloc/create_user/create_user_event.dart';
 import 'package:rollin_user/presentation/bloc/create_user/create_user_state.dart';
 import 'package:rollin_user/presentation/resourses/app_colours.dart';
+import 'package:rollin_user/presentation/screens/profile/complete_profile.dart';
 import 'package:rollin_user/presentation/widgets/custom_button.dart';
 import 'package:rollin_user/presentation/widgets/flushbar.dart';
 import 'package:rollin_user/presentation/widgets/textform_field.dart';
+import 'package:rollin_user/domain/usecases/register_usecase.dart';
+import 'package:rollin_user/data/repositories/create_user_repositoryimpl.dart';
 
-class UserRegisterScreen extends StatelessWidget {
-  UserRegisterScreen({super.key});
+class UserRegisterScreen extends StatefulWidget {
+  const UserRegisterScreen({super.key});
 
+  @override
+  State<UserRegisterScreen> createState() => _UserRegisterScreenState();
+}
+
+class _UserRegisterScreenState extends State<UserRegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool _obscurePassword = true; // 🔥 added
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +60,7 @@ class UserRegisterScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: AppColours.shineBlack,
-                border: Border.all(color: AppColours.shineWhite, width: 1),
+                border: Border.all(color: AppColours.shineWhite),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -57,13 +73,21 @@ class UserRegisterScreen extends StatelessWidget {
               child: BlocConsumer<RegisterBloc, RegisterState>(
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
-                    showFlushBar(context, "Registered Successfully!");
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => UserLoginScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => CompleteProfile(
+                          name: nameController.text.trim(),
+                          email: emailController.text.trim(),
+                        ),
+                      ),
                     );
                   } else if (state is RegisterFailure) {
-                    showFlushBar(context, state.message, backgroundColor: Colors.red);
+                    showFlushBar(
+                      context,
+                      state.message,
+                      backgroundColor: Colors.red,
+                    );
                   }
                 },
                 builder: (context, state) {
@@ -71,62 +95,88 @@ class UserRegisterScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: Text(
-                            'REGISTER',
-                            style: TextStyle(
-                              color: AppColours.shineWhite,
-                              fontSize: size.width < 600 ? 18 : 22,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Text(
+                          'REGISTER',
+                          style: TextStyle(
+                            color: AppColours.shineWhite,
+                            fontSize: size.width < 600 ? 18 : 22,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 24),
 
-                        // Name
+                        /// Name
                         CommonTextField(
                           controller: nameController,
                           hintText: 'User Name',
                           onTextChanged: (_) {},
-                          icon: const Icon(Icons.abc, color: AppColours.insideGrey),
-                          isPasswordField: false,
+                          icon: const Icon(
+                            Icons.person_outline,
+                            color: AppColours.insideGrey,
+                          ),
                         ),
+
                         const SizedBox(height: 16),
 
-                        // Email
+                        /// Email
                         CommonTextField(
                           controller: emailController,
                           hintText: 'Enter Email',
                           onTextChanged: (_) {},
-                          icon: const Icon(Icons.email_outlined, color: AppColours.insideGrey),
-                          isPasswordField: false,
+                          icon: const Icon(
+                            Icons.email_outlined,
+                            color: AppColours.insideGrey,
+                          ),
                         ),
+
                         const SizedBox(height: 16),
 
-                        // Password
+                        /// Password with TOGGLE 👁️
                         CommonTextField(
                           controller: passwordController,
                           hintText: 'Enter Password',
+                          isPasswordField: _obscurePassword,
                           onTextChanged: (_) {},
-                          icon: const Icon(Icons.password_outlined, color: AppColours.insideGrey),
-                          isPasswordField: true,
+                          icon: const Icon(
+                            Icons.lock_outline,
+                            color: AppColours.insideGrey,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColours.insideGrey,
+                              size: 18,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                         ),
+
                         const SizedBox(height: 24),
 
                         state is RegisterLoading
-                            ? const Center(child: CircularProgressIndicator())
+                            ? const CircularProgressIndicator()
                             : CustomButton(
                                 buttonText: 'REGISTER',
                                 onPressed: () {
                                   FocusScope.of(context).unfocus();
 
-                                  final name = nameController.text.trim();
-                                  final email = emailController.text.trim();
-                                  final password = passwordController.text.trim();
+                                  final name =
+                                      nameController.text.trim();
+                                  final email =
+                                      emailController.text.trim();
+                                  final password =
+                                      passwordController.text.trim();
 
-                                  if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                                  if (name.isEmpty ||
+                                      email.isEmpty ||
+                                      password.isEmpty) {
                                     showFlushBar(
                                       context,
                                       "Please fill all fields",
@@ -136,7 +186,9 @@ class UserRegisterScreen extends StatelessWidget {
                                   }
 
                                   final emailRegex = RegExp(
-                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                  );
+
                                   if (!emailRegex.hasMatch(email)) {
                                     showFlushBar(
                                       context,
@@ -155,13 +207,13 @@ class UserRegisterScreen extends StatelessWidget {
                                     return;
                                   }
 
-                                  BlocProvider.of<RegisterBloc>(context).add(
-                                    RegisterButtonPressed(
-                                      name: name,
-                                      email: email,
-                                      password: password,
-                                    ),
-                                  );
+                                  context.read<RegisterBloc>().add(
+                                        RegisterButtonPressed(
+                                          name: name,
+                                          email: email,
+                                          password: password,
+                                        ),
+                                      );
                                 },
                                 buttonColor: AppColours.primaryColor,
                                 textColor: AppColours.shineBlack,

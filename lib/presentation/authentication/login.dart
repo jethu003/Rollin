@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:rollin_user/presentation/bloc/login_user/login_user_bloc.dart';
 import 'package:rollin_user/presentation/bloc/login_user/login_user_event.dart';
 import 'package:rollin_user/presentation/bloc/login_user/login_user_state.dart';
@@ -10,15 +11,28 @@ import 'package:rollin_user/presentation/widgets/custom_button.dart';
 import 'package:rollin_user/presentation/widgets/textform_field.dart';
 import 'package:rollin_user/presentation/widgets/flushbar.dart';
 import 'package:rollin_user/presentation/authentication/user_register.dart';
+import 'package:rollin_user/presentation/widgets/custom_shimmer.dart';
 
+class UserLoginScreen extends StatefulWidget {
+  const UserLoginScreen({super.key});
 
-class UserLoginScreen extends StatelessWidget {
-  UserLoginScreen({super.key});
+  @override
+  State<UserLoginScreen> createState() => _UserLoginScreenState();
+}
 
+class _UserLoginScreenState extends State<UserLoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
+
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +50,7 @@ class UserLoginScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: AppColours.shineBlack,
-                border: Border.all(color: AppColours.shineWhite, width: 1),
+                border: Border.all(color: AppColours.shineWhite),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -49,14 +63,30 @@ class UserLoginScreen extends StatelessWidget {
               child: BlocConsumer<LoginBloc, LoginState>(
                 listener: (context, state) {
                   if (state is LoginSuccess) {
-                    showFlushBar(context, "Login Successful!");
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => BottomNavigator()));
-                    // Navigate to home page or bottom navigator
+                    showFlushBar(
+                      context,
+                      "Login Successful!",
+                      backgroundColor: AppColours.shineBlack,
+                    );
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BottomNavigator(),
+                      ),
+                      (_) => false,
+                    );
                   } else if (state is LoginFailure) {
-                    showFlushBar(context, state.message, backgroundColor: Colors.red);
+                    showFlushBar(
+                      context,
+                      'Please Register',
+                      backgroundColor: AppColours.shineWhite,
+                    );
                   }
                 },
                 builder: (context, state) {
+                  final bool isLoading = state is LoginLoading;
+
                   return Form(
                     key: _formKey,
                     child: Column(
@@ -72,46 +102,86 @@ class UserLoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // Email
+                        /// Email
                         CommonTextField(
                           controller: emailController,
                           hintText: 'Enter Email',
-                          onTextChanged: (_) {},
-                          icon: const Icon(Icons.email_outlined, color: AppColours.insideGrey, size: 18),
+                          icon: const Icon(
+                            Icons.email_outlined,
+                            color: AppColours.insideGrey,
+                            size: 18,
+                          ),
                           isPasswordField: false,
+                          onTextChanged: (_) {},
                         ),
                         const SizedBox(height: 16),
 
-                        // Password
+                        /// Password with TOGGLE
                         CommonTextField(
                           controller: passwordController,
                           hintText: 'Enter Password',
+                          isPasswordField: _obscurePassword,
+                          icon: const Icon(
+                            Icons.lock_outline,
+                            color: AppColours.insideGrey,
+                            size: 18,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColours.insideGrey,
+                              size: 18,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                           onTextChanged: (_) {},
-                          icon: const Icon(Icons.password_outlined, color: AppColours.insideGrey, size: 18),
-                          isPasswordField: true,
                         ),
+
                         const SizedBox(height: 24),
 
-                        state is LoginLoading
-                            ? const Center(child: CircularProgressIndicator())
+                        /// Login Button
+                        isLoading
+                            ? CustomShimmer(
+                              baseColor: AppColours.primaryColor,
+                                child: CustomButton(
+                                  buttonText: 'LOGGING IN...',
+                                  onPressed: () {},
+                                  buttonColor: AppColours.primaryColor,
+                                  textColor: AppColours.shineBlack,
+                                  padding: EdgeInsets.zero,
+                                ),
+                              )
                             : CustomButton(
                                 buttonText: 'LOGIN',
                                 onPressed: () {
                                   FocusScope.of(context).unfocus();
 
-                                  final email = emailController.text.trim();
-                                  final password = passwordController.text.trim();
+                                  final email =
+                                      emailController.text.trim();
+                                  final password =
+                                      passwordController.text.trim();
 
-                                  if (email.isEmpty || password.isEmpty) {
+                                  if (email.isEmpty ||
+                                      password.isEmpty) {
                                     showFlushBar(
                                       context,
                                       "Please fill all fields",
-                                      backgroundColor: Colors.red,
+                                      backgroundColor:
+                                          AppColours.shineWhite,
                                     );
                                     return;
                                   }
 
-                                  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                  final emailRegex = RegExp(
+                                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                  );
+
                                   if (!emailRegex.hasMatch(email)) {
                                     showFlushBar(
                                       context,
@@ -130,33 +200,45 @@ class UserLoginScreen extends StatelessWidget {
                                     return;
                                   }
 
-                                  BlocProvider.of<LoginBloc>(context).add(
-                                    LoginButtonPressed(email: email, password: password),
-                                  );
+                                  context.read<LoginBloc>().add(
+                                        LoginButtonPressed(
+                                          email: email,
+                                          password: password,
+                                        ),
+                                      );
                                 },
                                 buttonColor: AppColours.primaryColor,
                                 textColor: AppColours.shineBlack,
                                 padding: EdgeInsets.zero,
                               ),
+
                         const SizedBox(height: 16),
 
+                        /// Register
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
                               'Not a user?',
-                              style: TextStyle(color: AppColours.shineWhite),
+                              style: TextStyle(
+                                color: AppColours.shineWhite,
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => UserRegisterScreen()),
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                         UserRegisterScreen(),
+                                  ),
                                 );
                               },
                               child: const Text(
                                 'Register',
-                                style: TextStyle(color: AppColours.primaryColor),
+                                style: TextStyle(
+                                  color: AppColours.primaryColor,
+                                ),
                               ),
                             ),
                           ],

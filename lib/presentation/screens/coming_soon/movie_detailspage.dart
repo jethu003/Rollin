@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rollin_user/domain/entities/coming_soon.dart';
+import 'package:rollin_user/presentation/widgets/custom_shimmer.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   final MovieEntity movie;
@@ -23,7 +24,7 @@ class MovieDetailsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Backdrop
+              ///  BACKDROP WITH SHIMMER
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
@@ -31,11 +32,30 @@ class MovieDetailsPage extends StatelessWidget {
                   width: double.infinity,
                   height: height * 0.25,
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return CustomShimmer(
+                      child: Container(
+                        height: height * 0.25,
+                        color: Colors.grey.shade300,
+                      ),
+                    );
+                  },
+                  errorBuilder: (_, __, ___) => Container(
+                    height: height * 0.25,
+                    color: Colors.grey.shade300,
+                    child: const Icon(
+                      Icons.broken_image,
+                      size: 50,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
               ),
+
               SizedBox(height: height * 0.02),
 
-              // Title
+              ///  TITLE
               Text(
                 movie.title,
                 style: TextStyle(
@@ -44,34 +64,45 @@ class MovieDetailsPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               SizedBox(height: height * 0.005),
 
-              // Language & Release Date
+              ///  LANGUAGE + DATE
               Row(
                 children: [
                   Text(
                     movie.language.toUpperCase(),
-                    style: TextStyle(color: Colors.grey[700], fontSize: width * 0.035),
+                    style: TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: width * 0.035),
                   ),
                   SizedBox(width: width * 0.04),
                   Text(
                     movie.releaseDate,
-                    style: TextStyle(color: Colors.grey[700], fontSize: width * 0.035),
+                    style: TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: width * 0.035),
                   ),
                 ],
               ),
+
               SizedBox(height: height * 0.01),
 
-              // Genres
+              ///  GENRES
               Text(
                 movie.genres.join(" • "),
-                style: TextStyle(color: Colors.grey[700], fontSize: width * 0.035),
+                style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: width * 0.035),
               ),
 
-              // Grey divider under genres
-              Divider(color: Colors.grey[400], thickness: 1, height: height * 0.03),
+              Divider(
+                color: Colors.grey[400],
+                thickness: 1,
+                height: height * 0.03,
+              ),
 
-              // Plot
+              ///  PLOT
               Text(
                 "Plot:",
                 style: TextStyle(
@@ -82,11 +113,14 @@ class MovieDetailsPage extends StatelessWidget {
               SizedBox(height: height * 0.005),
               Text(
                 movie.overview,
-                style: TextStyle(color: shineWhite, fontSize: width * 0.035),
+                style: TextStyle(
+                    color: shineWhite,
+                    fontSize: width * 0.035),
               ),
+
               SizedBox(height: height * 0.03),
 
-              // Cast
+              ///  CAST
               Text(
                 "Cast:",
                 style: TextStyle(
@@ -95,6 +129,7 @@ class MovieDetailsPage extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: height * 0.01),
+
               SizedBox(
                 height: height * 0.18,
                 child: ListView.builder(
@@ -107,6 +142,7 @@ class MovieDetailsPage extends StatelessWidget {
                       margin: EdgeInsets.only(right: width * 0.03),
                       child: Column(
                         children: [
+                          ///  CAST IMAGE SHIMMER
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -114,18 +150,39 @@ class MovieDetailsPage extends StatelessWidget {
                               width: width * 0.18,
                               height: width * 0.18,
                               fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, progress) {
+                                if (progress == null) return child;
+                                return CustomShimmer(
+                                  child: Container(
+                                    width: width * 0.18,
+                                    height: width * 0.18,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (_, __, ___) => Container(
+                                width: width * 0.18,
+                                height: width * 0.18,
+                                color: Colors.grey.shade300,
+                                child: const Icon(Icons.person),
+                              ),
                             ),
                           ),
                           SizedBox(height: height * 0.005),
                           Text(
                             cast.name,
-                            style: TextStyle(color: shineWhite, fontSize: width * 0.03),
+                            style: TextStyle(
+                                color: shineWhite,
+                                fontSize: width * 0.03),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             cast.character,
-                            style: TextStyle(color: Colors.grey[700], fontSize: width * 0.025),
+                            style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: width * 0.025),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -135,9 +192,10 @@ class MovieDetailsPage extends StatelessWidget {
                   },
                 ),
               ),
+
               SizedBox(height: height * 0.03),
 
-              // Crew
+              ///  CREW
               Text(
                 "Crew:",
                 style: TextStyle(
@@ -146,6 +204,7 @@ class MovieDetailsPage extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: height * 0.01),
+
               SizedBox(
                 height: height * 0.18,
                 child: ListView.builder(
@@ -158,25 +217,31 @@ class MovieDetailsPage extends StatelessWidget {
                       margin: EdgeInsets.only(right: width * 0.03),
                       child: Column(
                         children: [
-                          Container(
-                            width: width * 0.18,
-                            height: width * 0.18,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(8),
+                          /// 👥 CREW AVATAR SHIMMER
+                          CustomShimmer(
+                            child: Container(
+                              width: width * 0.18,
+                              height: width * 0.18,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            child: const Icon(Icons.person, size: 40, color: Colors.white),
                           ),
                           SizedBox(height: height * 0.005),
                           Text(
                             crew.name,
-                            style: TextStyle(color: shineWhite, fontSize: width * 0.03),
+                            style: TextStyle(
+                                color: shineWhite,
+                                fontSize: width * 0.03),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             crew.job,
-                            style: TextStyle(color: Colors.grey[700], fontSize: width * 0.025),
+                            style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: width * 0.025),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -186,6 +251,7 @@ class MovieDetailsPage extends StatelessWidget {
                   },
                 ),
               ),
+
               SizedBox(height: height * 0.03),
             ],
           ),

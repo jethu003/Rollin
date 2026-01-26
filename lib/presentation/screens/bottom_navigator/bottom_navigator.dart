@@ -15,11 +15,11 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const TheatreShowMoviesPage(),
-    const CinemasPage(),
-    const ComingSoonMovies(),
-    const ProfilePage(),
+  final List<Widget> _screens = const [
+    TheatreShowMoviesPage(),
+    CinemasPage(),
+    ComingSoonMovies(),
+    ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
@@ -28,35 +28,61 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     });
   }
 
+  /// Base icon widget (uniform size)
+  Widget _navIcon(String assetPath, {double scale = 0.9}) {
+    return SizedBox(
+      height: 22,
+      width: 22,
+      child: Transform.scale(
+        scale: scale,
+        child: ImageIcon(
+          AssetImage(assetPath),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColours.shineBlack,
-      body: _screens[_currentIndex],
+
+      
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
-        
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        elevation: 10,
+        elevation: 20,
         backgroundColor: AppColours.shineBlack,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor:AppColours.primaryColor,
-        unselectedItemColor: AppColours.shineWhite,
-        items: const [
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedItemColor: AppColours.shineWhite,
+        unselectedItemColor:AppColours.insideGrey ,
+
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: _navIcon('assets/home.png'),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.theaters),
+            icon: _navIcon('assets/cinemas2.png'),
             label: "Cinemas",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.new_releases),
+            
+            icon: _navIcon(
+              'assets/coming-soon.png',
+              scale: 1.3,
+            ),
             label: "Coming Soon",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: _navIcon('assets/user.png'),
             label: "Profile",
           ),
         ],

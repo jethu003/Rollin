@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rollin_user/presentation/resourses/app_colours.dart';
 
-
-
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? Function(String?)? validator;
   final Function(String) onTextChanged;
-  final Icon icon;  
-  final bool isPasswordField;  
+  final Icon icon;
+  final bool isPasswordField;
+  final Widget? suffixIcon;
 
   const CommonTextField({
     super.key,
@@ -17,26 +16,40 @@ class CommonTextField extends StatelessWidget {
     required this.hintText,
     this.validator,
     required this.onTextChanged,
-    required this.icon,  
-    this.isPasswordField = false,  
+    required this.icon,
+    this.isPasswordField = false,
+    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       onChanged: onTextChanged,
       validator: validator,
+      obscureText: isPasswordField,
       cursorWidth: 2,
       cursorColor: AppColours.insideGrey,
-      controller: controller,
-      obscureText: isPasswordField,  
-      style: const TextStyle(color: AppColours.insideGrey,
-      fontSize: 14
+      style: const TextStyle(
+        color: AppColours.insideGrey,
+        fontSize: 14,
       ),
       decoration: InputDecoration(
         prefixIcon: icon,
+
+        // ✅ THIS LINE FIXES EVERYTHING
+        suffixIcon: suffixIcon,
+
         hintText: hintText,
-        hintStyle: const TextStyle(color:AppColours.insideGrey,fontSize: 13,fontWeight: FontWeight.normal), 
+        hintStyle: const TextStyle(
+          color: AppColours.insideGrey,
+          fontSize: 13,
+          fontWeight: FontWeight.normal,
+        ),
+        filled: true,
+        fillColor: AppColours.shineBlack,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           borderSide: BorderSide.none,

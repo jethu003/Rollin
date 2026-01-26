@@ -8,6 +8,7 @@ import 'package:rollin_user/presentation/bloc/coming_soon/coming_soon_movies_eve
 import 'package:rollin_user/presentation/bloc/coming_soon/coming_soon_movies_state.dart';
 import 'package:rollin_user/presentation/resourses/app_colours.dart';
 import 'package:rollin_user/presentation/screens/coming_soon/movie_detailspage.dart';
+import 'package:rollin_user/presentation/widgets/custom_shimmer.dart';
 
 class ComingSoonMovies extends StatelessWidget {
   const ComingSoonMovies({super.key});
@@ -18,7 +19,8 @@ class ComingSoonMovies extends StatelessWidget {
     final getComingSoonMovies = GetComingSoonMovies(repo);
 
     return BlocProvider(
-      create: (_) => MovieBloc(getComingSoonMovies)..add(FetchComingSoonMovies()),
+      create: (_) =>
+          MovieBloc(getComingSoonMovies)..add(FetchComingSoonMovies()),
       child: Builder(
         builder: (context) {
           final size = MediaQuery.of(context).size;
@@ -34,13 +36,68 @@ class ComingSoonMovies extends StatelessWidget {
             backgroundColor: AppColours.shineBlack,
             body: BlocBuilder<MovieBloc, MovieState>(
               builder: (context, state) {
+                ///  SHIMMER LOADING STATE
                 if (state is MovieLoading) {
-                  return const Center(child: CircularProgressIndicator(color: Colors.amber));
-                } else if (state is MovieSuccess) {
+                  return Padding(
+                    padding: EdgeInsets.all(width * 0.03),
+                    child: Wrap(
+                      spacing: width * 0.04,
+                      runSpacing: height * 0.02,
+                      children: List.generate(6, (_) {
+                        final itemWidth =
+                            (width - (width * 0.04) - (width * 0.06)) / 2;
+
+                        return SizedBox(
+                          width: itemWidth,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomShimmer(
+                                child: Container(
+                                  height: height * 0.30,
+                                  width: itemWidth,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade800,
+                                    borderRadius:
+                                        BorderRadius.circular(width * 0.02),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              CustomShimmer(
+                                child: Container(
+                                  height: 12,
+                                  width: itemWidth * 0.7,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              CustomShimmer(
+                                child: Container(
+                                  height: 10,
+                                  width: itemWidth * 0.5,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                  );
+                }
+
+                ///  SUCCESS STATE
+                if (state is MovieSuccess) {
                   final movies = state.movies;
+
                   if (movies.isEmpty) {
                     return const Center(
-                        child: Text("No movies available", style: TextStyle(color: Colors.white)));
+                      child: Text(
+                        "No movies available",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
                   }
 
                   return Padding(
@@ -50,36 +107,63 @@ class ComingSoonMovies extends StatelessWidget {
                         spacing: width * 0.04,
                         runSpacing: height * 0.02,
                         children: movies.map((movie) {
-                          double itemWidth = (width - (width * 0.04) - (width * 0.06)) / 2;
+                          final itemWidth =
+                              (width - (width * 0.04) - (width * 0.06)) / 2;
 
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => MovieDetailsPage(movie: movie),
+                                  builder: (_) =>
+                                      MovieDetailsPage(movie: movie),
                                 ),
                               );
                             },
                             child: SizedBox(
                               width: itemWidth,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                 children: [
-                                  // Poster
-                                  Container(
-                                    width: itemWidth,
-                                    height: height * 0.30,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(movie.posterUrl),
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.circular(width * 0.02),
+                                  ///  POSTER WITH SHIMMER
+                                  ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(width * 0.02),
+                                    child: Image.network(
+                                      movie.posterUrl,
+                                      width: itemWidth,
+                                      height: height * 0.30,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, progress) {
+                                        if (progress == null) return child;
+                                        return CustomShimmer(
+                                          child: Container(
+                                            width: itemWidth,
+                                            height: height * 0.30,
+                                            color: Colors.grey.shade800,
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          width: itemWidth,
+                                          height: height * 0.30,
+                                          color: Colors.grey.shade800,
+                                          child: const Icon(
+                                            Icons.broken_image,
+                                            color: Colors.grey,
+                                            size: 40,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                   const SizedBox(height: 6),
-                                  // Title
+
+                                  /// 🎞 TITLE
                                   Text(
                                     movie.title,
                                     style: const TextStyle(
@@ -89,16 +173,17 @@ class ComingSoonMovies extends StatelessWidget {
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  // Language
+
+                                  ///  LANGUAGE
                                   Text(
                                     movie.language,
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  // Genres
+
+                                  ///  GENRES
                                   Text(
                                     movie.genres.join(" • "),
                                     style: const TextStyle(
@@ -106,17 +191,6 @@ class ComingSoonMovies extends StatelessWidget {
                                       fontSize: 12,
                                     ),
                                     overflow: TextOverflow.ellipsis,
-                                  ),
-                                  // Add button (optional)
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        // optional: add show creation logic here
-                                      },
-                                      icon: const Icon(Icons.add_circle,
-                                          color: Colors.amber, size: 28),
-                                    ),
                                   ),
                                 ],
                               ),
@@ -126,12 +200,19 @@ class ComingSoonMovies extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (state is MovieFailure) {
-                  return Center(
-                      child: Text("Error: ${state.message}", style: const TextStyle(color: Colors.red)));
                 }
 
-                return const SizedBox();
+                ///  ERROR STATE
+                if (state is MovieFailure) {
+                  return Center(
+                    child: Text(
+                      "Error: ${state.message}",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                }
+
+                return const SizedBox.shrink();
               },
             ),
           );

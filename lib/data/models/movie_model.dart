@@ -9,6 +9,8 @@ class MovieModel {
   final String releaseDate;
   final String trailerUrl;
   final List<String> genres;
+  final List<Map<String, dynamic>> cast;
+  final List<Map<String, dynamic>> crew;
 
   MovieModel({
     required this.id,
@@ -21,10 +23,26 @@ class MovieModel {
     required this.releaseDate,
     required this.trailerUrl,
     required this.genres,
+    this.cast = const [],
+    this.crew = const [],
   });
 
-  /// ✅ Create from Firestore / Map
   factory MovieModel.fromMap(Map<String, dynamic> map) {
+    List<Map<String, dynamic>> safeCast = [];
+    List<Map<String, dynamic>> safeCrew = [];
+
+    if (map['cast'] != null && map['cast'] is List) {
+      safeCast = List<Map<String, dynamic>>.from(
+        (map['cast'] as List).map((e) => Map<String, dynamic>.from(e)),
+      );
+    }
+
+    if (map['crew'] != null && map['crew'] is List) {
+      safeCrew = List<Map<String, dynamic>>.from(
+        (map['crew'] as List).map((e) => Map<String, dynamic>.from(e)),
+      );
+    }
+
     return MovieModel(
       id: map['id'] is int
           ? map['id']
@@ -40,10 +58,11 @@ class MovieModel {
       genres: (map['genres'] is List)
           ? List<String>.from(map['genres'].map((e) => e.toString()))
           : [],
+      cast: safeCast,
+      crew: safeCrew,
     );
   }
 
-  /// ✅ Convert back to JSON/Map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -56,38 +75,8 @@ class MovieModel {
       'release_date': releaseDate,
       'trailerUrl': trailerUrl,
       'genres': genres,
+      'cast': cast,
+      'crew': crew,
     };
-  }
-
-  /// ✅ Optional: copyWith
-  MovieModel copyWith({
-    int? id,
-    String? title,
-    String? posterUrl,
-    String? backdropUrl,
-    double? rating,
-    String? language,
-    String? overview,
-    String? releaseDate,
-    String? trailerUrl,
-    List<String>? genres,
-  }) {
-    return MovieModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      posterUrl: posterUrl ?? this.posterUrl,
-      backdropUrl: backdropUrl ?? this.backdropUrl,
-      rating: rating ?? this.rating,
-      language: language ?? this.language,
-      overview: overview ?? this.overview,
-      releaseDate: releaseDate ?? this.releaseDate,
-      trailerUrl: trailerUrl ?? this.trailerUrl,
-      genres: genres ?? this.genres,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'MovieModel(id: $id, title: $title, rating: $rating, language: $language, genres: $genres)';
   }
 }
