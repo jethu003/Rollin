@@ -64,9 +64,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
           final movies =
               state is TheatreMoviesLoaded ? state.movies : <MovieEntity>[];
 
-          /// ===============================
-          /// LOADING
-          /// ===============================
+         
           if (loading) {
             return Padding(
               padding: EdgeInsets.all(width * 0.03),
@@ -87,9 +85,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
             );
           }
 
-          /// ===============================
-          /// EMPTY
-          /// ===============================
+
           if (movies.isEmpty) {
             return const Center(
               child: Column(
@@ -121,7 +117,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
             padding: EdgeInsets.all(width * 0.03),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 👈 keeps left
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(
                     spacing: width * 0.04,

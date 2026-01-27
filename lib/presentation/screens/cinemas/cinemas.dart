@@ -81,7 +81,7 @@ class _CinemasView extends StatelessWidget {
           if (state is CinemaError) {
             return Center(
               child: Text(
-                state.message,
+                'hello',
                 style: const TextStyle(color: Colors.redAccent),
               ),
             );
@@ -272,38 +272,57 @@ class _CinemasView extends StatelessWidget {
 //     _loadTheatres();
 //   }
 
-//   Future<void> _loadTheatres() async {
-//     try {
-//       final showsSnap = await _firestore.collection('shows').get();
-//       final theatreIds = showsSnap.docs
-//           .map((doc) => doc['theatreId'])
-//           .whereType<String>()
-//           .toSet()
-//           .toList();
+// Future<void> _loadTheatres() async {
+//   try {
+//     // 1️⃣ Fetch ONLY active shows
+//     final showsSnap = await _firestore
+//         .collection('shows')
+//         .where('status', isEqualTo: 'active')
+//         .get();
 
-//       List<Map<String, dynamic>> loaded = [];
-//       for (var id in theatreIds) {
-//         final doc = await _firestore.collection('userprofile').doc(id).get();
-//         if (doc.exists) {
-//           final data = doc.data()!;
-//           loaded.add({
-//             'id': id,
-//             'name': data['name'] ?? 'Unknown',
-//             'location': data['city'] ?? '',
-//             'image': (data['images'] as List?)?.first ?? '',
-//           });
-//         }
-//       }
+//     // 2️⃣ Extract valid theatreIds safely
+//     final theatreIds = showsSnap.docs
+//         .map((doc) => doc.data()['theatreId'])
+//         .where((id) => id != null && id is String && id.isNotEmpty)
+//         .cast<String>()
+//         .toSet(); // removes duplicates
 
-//       setState(() {
-//         _theatres = loaded;
-//         _isLoading = false;
+//     List<Map<String, dynamic>> loaded = [];
+
+//     // 3️⃣ Fetch theatre profiles safely
+//     for (final id in theatreIds) {
+//       final doc = await _firestore.collection('userprofile').doc(id).get();
+
+//       if (!doc.exists) continue;
+
+//       final data = doc.data();
+//       if (data == null) continue;
+
+//       loaded.add({
+//         'id': id,
+//         'name': data['name'] ?? 'Unknown Theatre',
+//         'location': data['city'] ?? '',
+//         'image': (data['images'] is List && data['images'].isNotEmpty)
+//             ? data['images'][0]
+//             : '',
 //       });
-//     } catch (e) {
-//       print("Error: $e");
-//       setState(() => _isLoading = false);
 //     }
+
+//     // 4️⃣ Update UI
+//     setState(() {
+//       _theatres = loaded;
+//       _isLoading = false;
+//     });
+//   } catch (e, stack) {
+//     debugPrint('❌ Failed to load theatres: $e');
+//     debugPrintStack(stackTrace: stack);
+
+//     setState(() {
+//       _isLoading = false;
+//     });
 //   }
+// }
+
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -333,7 +352,7 @@ class _CinemasView extends StatelessWidget {
 //         ],
 //       ),
 
-//       // 🔹 Direct shimmer in the body (no extra function)
+//       //  Direct shimmer in the body (no extra function)
 //       body: _isLoading
 //           ? ListView.builder(
 //               padding: const EdgeInsets.all(16),

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PaymentRepository {
- 
+  
 
   Future<String> createPaymentIntent(double amount) async {
     final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
