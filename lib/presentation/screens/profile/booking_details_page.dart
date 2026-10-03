@@ -11,8 +11,7 @@ class BookingDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedSeats =
-        booking.seats.map((s) => s.split("-").last).join(", ");
+   
 
     double totalAmount = booking.totalPrice;
 

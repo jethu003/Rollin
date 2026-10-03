@@ -33,21 +33,20 @@ class StripeService {
       // Step 3: Show payment sheet
       await Stripe.instance.presentPaymentSheet();
 
-      print("PAYMENT SUCCESS ✔");
+      
     } catch (e) {
-      print("PAYMENT FAILED ❌: $e");
+      
     }
   }
 
-  /// 2️⃣ Create PaymentIntent — FIXED
+
   Future<Map<String, dynamic>?> _createPaymentIntent(
       String amount, String currency) async {
     try {
       Map<String, dynamic> data = {
         'amount': amount,
         'currency': currency,
-        // ❌ Removed 'payment_method_types[]'
-        // Stripe auto-detects card for PaymentSheet
+   
       };
 
       var response = await _dio.post(
@@ -72,7 +71,7 @@ class StripeService {
     }
   }
 
-  /// 3️⃣ Convert ₹ → paise
+  ///  Convert ₹ → paise
   String _calculateAmount(int amount) {
     return (amount * 100).toString();
   }

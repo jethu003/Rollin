@@ -36,7 +36,7 @@ class ComingSoonMovies extends StatelessWidget {
             backgroundColor: AppColours.shineBlack,
             body: BlocBuilder<MovieBloc, MovieState>(
               builder: (context, state) {
-                ///  SHIMMER LOADING STATE
+                
                 if (state is MovieLoading) {
                   return Padding(
                     padding: EdgeInsets.all(width * 0.03),
@@ -57,7 +57,7 @@ class ComingSoonMovies extends StatelessWidget {
                                   height: height * 0.30,
                                   width: itemWidth,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade800,
+                                    color: AppColours.shineWhite,
                                     borderRadius:
                                         BorderRadius.circular(width * 0.02),
                                   ),
@@ -68,7 +68,7 @@ class ComingSoonMovies extends StatelessWidget {
                                 child: Container(
                                   height: 12,
                                   width: itemWidth * 0.7,
-                                  color: Colors.grey.shade800,
+                                  color: AppColours.shineWhite,
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -76,7 +76,7 @@ class ComingSoonMovies extends StatelessWidget {
                                 child: Container(
                                   height: 10,
                                   width: itemWidth * 0.5,
-                                  color: Colors.grey.shade800,
+                                  color: AppColours.shineWhite,
                                 ),
                               ),
                             ],
@@ -95,7 +95,7 @@ class ComingSoonMovies extends StatelessWidget {
                     return const Center(
                       child: Text(
                         "No movies available",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColours.shineBlack),
                       ),
                     );
                   }
@@ -142,7 +142,7 @@ class ComingSoonMovies extends StatelessWidget {
                                           child: Container(
                                             width: itemWidth,
                                             height: height * 0.30,
-                                            color: Colors.grey.shade800,
+                                            color: AppColours.shineWhite,
                                           ),
                                         );
                                       },
@@ -151,7 +151,7 @@ class ComingSoonMovies extends StatelessWidget {
                                         return Container(
                                           width: itemWidth,
                                           height: height * 0.30,
-                                          color: Colors.grey.shade800,
+                                          color: AppColours.shineWhite,
                                           child: const Icon(
                                             Icons.broken_image,
                                             color: Colors.grey,
@@ -187,7 +187,7 @@ class ComingSoonMovies extends StatelessWidget {
                                   Text(
                                     movie.genres.join(" • "),
                                     style: const TextStyle(
-                                      color: Colors.grey,
+                                      color: AppColours.shineWhite,
                                       fontSize: 12,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -207,7 +207,7 @@ class ComingSoonMovies extends StatelessWidget {
                   return Center(
                     child: Text(
                       "Error: ${state.message}",
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(color: AppColours.shineWhite),
                     ),
                   );
                 }

@@ -29,7 +29,6 @@ Future<List<Map<String, dynamic>>> getShowsWithMovieDetails(String theatreId) as
       'movie': movieData,
     });
   }
-  print(result);
   return result;
 }
 

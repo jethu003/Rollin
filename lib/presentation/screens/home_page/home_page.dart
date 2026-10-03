@@ -94,13 +94,13 @@ class _TheatreShowMoviesView extends StatelessWidget {
                   Icon(
                     Icons.movie_creation_outlined,
                     size: 70,
-                    color: Colors.grey,
+                    color: AppColours.shineWhite,
                   ),
                   SizedBox(height: 12),
                   Text(
                         "Sorry no movies available!",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 200, 194, 194),
+                          color: AppColours.shineWhite,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -110,9 +110,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
             );
           }
 
-          /// ===============================
-          /// MOVIES + FOOTER TEXT
-          /// ===============================
+    
           return Padding(
             padding: EdgeInsets.all(width * 0.03),
             child: SingleChildScrollView(
@@ -156,7 +154,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
                                       ),
                                     ),
 
-                                    /// ▶️ Trailer
+                                    /// ▶Trailer
                                     Positioned(
                                       bottom: 8,
                                       right: 8,
@@ -177,8 +175,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Colors.black
-                                                .withOpacity(0.6),
+                                            color: AppColours.shineWhite,
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(
@@ -205,14 +202,14 @@ class _TheatreShowMoviesView extends StatelessWidget {
                               Text(
                                 movie.language,
                                 style: const TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColours.shineWhite,
                                   fontSize: 12,
                                 ),
                               ),
                               Text(
                                 movie.genres.join(' • '),
                                 style: const TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColours.shineWhite,
                                   fontSize: 12,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -230,7 +227,7 @@ class _TheatreShowMoviesView extends StatelessWidget {
                   child: Text(
                         "That's all we've got!",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 200, 194, 194),
+                          color: AppColours.shineWhite,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),

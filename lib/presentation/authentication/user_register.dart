@@ -27,7 +27,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  bool _obscurePassword = true; // 🔥 added
+  bool _obscurePassword = true; 
 
   @override
   void dispose() {
@@ -132,7 +132,7 @@ class _UserRegisterScreenState extends State<UserRegisterScreen> {
 
                         const SizedBox(height: 16),
 
-                        /// Password with TOGGLE 👁️
+                        /// Password with TOGGLE 
                         CommonTextField(
                           controller: passwordController,
                           hintText: 'Enter Password',

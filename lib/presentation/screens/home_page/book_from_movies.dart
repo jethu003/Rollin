@@ -67,12 +67,12 @@ class MovieDetailsOverlayPage extends StatelessWidget {
                     children: [
                       Text(
                         (movie['language'] ?? '').toUpperCase(),
-                        style: TextStyle(color: Colors.grey[700]),
+                        style: TextStyle(),
                       ),
                       SizedBox(width: width * 0.04),
                       Text(
                         movie['releaseDate'] ?? '',
-                        style: TextStyle(color: Colors.grey[700]),
+                        style: TextStyle(color:AppColours.shineWhite),
                       ),
                     ],
                   ),
@@ -85,7 +85,7 @@ class MovieDetailsOverlayPage extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
 
-                  Divider(color: Colors.grey[400]),
+                  Divider(color: AppColours.shineWhite),
 
                   /// PLOT
                   Text(

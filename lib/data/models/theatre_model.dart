@@ -11,7 +11,7 @@ class TheatreModel {
   final String? street;
   final double? lat;
   final double? lng;
-  final List<String> images; // ✅ image array from Firestore
+  final List<String> images; 
 
   TheatreModel({
     required this.id,
@@ -29,7 +29,7 @@ class TheatreModel {
     required this.images,
   });
 
-  /// 🧩 Create from Firestore or API map
+  
   factory TheatreModel.fromMap(Map<String, dynamic> map, String id) {
     return TheatreModel(
       id: id,
@@ -50,7 +50,7 @@ class TheatreModel {
     );
   }
 
-  /// 🔁 Convert to JSON / Map (useful for Firestore or APIs)
+  
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -69,7 +69,7 @@ class TheatreModel {
     };
   }
 
-  /// ✨ Optional copyWith
+  
   TheatreModel copyWith({
     String? id,
     String? name,
@@ -102,7 +102,6 @@ class TheatreModel {
     );
   }
 
-  /// 🧾 Debug printing
   @override
   String toString() {
     return 'TheatreModel(id: $id, name: $name, city: $city, location: $location, email: $email, '

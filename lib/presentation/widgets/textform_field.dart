@@ -37,7 +37,7 @@ class CommonTextField extends StatelessWidget {
       decoration: InputDecoration(
         prefixIcon: icon,
 
-        // ✅ THIS LINE FIXES EVERYTHING
+        //  THIS LINE FIXES EVERYTHING
         suffixIcon: suffixIcon,
 
         hintText: hintText,

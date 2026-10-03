@@ -32,7 +32,6 @@ class ShowModel {
     );
   }
 
-  /// 🔁 Convert to JSON / Map (for debug, Firestore, or network calls)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -45,7 +44,7 @@ class ShowModel {
     };
   }
 
-  /// ✨ Optional: modify values easily without rebuilding from scratch
+ 
   ShowModel copyWith({
     String? id,
     String? theatreId,

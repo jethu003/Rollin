@@ -55,7 +55,7 @@ class _FullScreenTrailerPageState extends State<FullScreenTrailerPage> {
 
   @override
   void dispose() {
-    /// Restore system UI
+    
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.edgeToEdge,
     );

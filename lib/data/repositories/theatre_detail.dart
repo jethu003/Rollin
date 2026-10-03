@@ -85,18 +85,3 @@ class MovieRepository {
 
 
 
-// class TheatreRepository {
-//   final FirebaseFirestore firestore;
-
-//   TheatreRepository(this.firestore);
-
-//   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> fetchShows(
-//       String theatreId) async {
-//     final snap = await firestore
-//         .collection('shows')
-//         .where('theatreId', isEqualTo: theatreId)
-//         .get();
-
-//     return snap.docs;
-//   }
-// }
