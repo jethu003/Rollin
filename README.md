@@ -1,16 +1,27 @@
-# rollin_user
+Rollin
 
-A new Flutter project.
+Rollin is a movie ticket booking platform built with Flutter and Firebase. This repo Rollin is the user app.
 
-## Getting Started
+Rollin is made of three separate apps sharing one Firebase backend:
 
-This project is a starting point for a Flutter application.
+App	Platform	Purpose
+User (this repo)	Mobile	Browse movies, book seats, pay, view history
+Theatre Admin	Mobile	Manage theatres, screens, seat layouts, revenue
+Super Admin	Web	Platform-level management
+. Features
+. Firebase Auth
+. Movies and trailers via TMDB API
+. Search for movies and theatres
+. Theatres and show timings
+. Real-time seat availability (Cloud Firestore)
+. Stripe payments (test mode)
+. Booking history and profile management
+. Tech Stack
 
-A few resources to get you started if this is your first Flutter project:
+Flutter · BLoC · Clean Architecture · Firebase (Auth, Firestore, Storage) · Stripe · TMDB 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+. Architecture
+lib/
+├── data/           # Data sources, models, repository implementations
+├── domain/         # Entities, repository contracts, use cases
+└── presentation/   # Pages, widgets, BLoCs
