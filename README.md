@@ -5,9 +5,9 @@ Rollin is a movie ticket booking platform built with Flutter and Firebase. This 
 Rollin is made of three separate apps sharing one Firebase backend:
 
 App	Platform	Purpose
-User (this repo)	Mobile	Browse movies, book seats, pay, view history
-Theatre Admin	Mobile	Manage theatres, screens, seat layouts, revenue
-Super Admin	Web	Platform-level management
+User (this repo)	Mobile	Browse movies, book seats, pay, view history,
+Theatre Admin	Mobile	Manage theatres, screens, seat layouts, revenue,
+Super Admin	Web	Platform-level management,
 . Features
 . Firebase Auth
 . Movies and trailers via TMDB API
